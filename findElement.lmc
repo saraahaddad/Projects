@@ -1,0 +1,116 @@
+#Auteurs: Sara Haddad, Marianne Pemmerl, Catina Beaulieu
+#Date de remise: Mardi 30 novembre 2021
+
+#Ce programme permet d'entrer 10 valeurs et de les stocker
+#dans un tableau, afin de pouvoir chercher parmis les
+#elements une valeur voulue
+
+#Commencer par stocker dix valeurs dans un tableau
+	BR start
+
+
+#Cette partie permet d'entrer une valeur et de la chercher
+#parmis les elements stockes dans le tableau
+#Elle correspond a la fonction "trouverIndexe()" du code
+#haut niveau
+loop    IN            #entrer la valeur a chercher
+	STO find
+	BR suite
+
+search	LDA TAB       #load les elements a partir de la fin
+
+	SUB find
+	BRZ found     #si la difference est 0, on a trouve
+	BR indexDecrement
+
+indexDecrement
+	LDA index     #on decremente l'indexe au fur et a
+	 	      #mesure qu'on recule dans le tableau
+	SUB one
+	STO index
+	BRP continue
+	BR notFound   #la valeur n'est pas dans le tableau
+
+continue
+	BR suite      #on continue la recherche
+
+suite   LDA search    #aller a l'adresse du dernier element
+	SUB one
+	STO search	
+	BR search     #verifier si on a trouve la valeur
+	 
+found	LDA index     #trouver l'indexe de la valeur dans
+		      #le tableau
+	SUB size      #on veut l'indexe negatif
+	OUT
+	HLT
+
+notFound              #on n'a pas trouve la valeur
+        LDA index     #retourner l'indexe -11
+	SUB size
+	OUT
+	HLT
+
+
+#Cette partie permet d'entrer 10 valeurs et de les stocker
+#dans un tableau, on peut l'associer a la fonction
+#"remplirTableau()" du code haut niveau
+
+
+start   BR condition
+
+tableau
+        IN            #ajouter un element au tableau
+	BR store
+
+store	STO TAB
+
+storeIncrement        #incrementer l'adresse de stockage
+	LDA store
+	ADD one
+	STO store
+
+#Avancer a chaque fois qu'on ajoute un element afin de 
+#pouvoir commencer la recherche en partant de la fin
+walkthrough       		        
+	LDA search
+	ADD one
+	STO search
+
+loopIncrement
+	LDA count     #incrementer le compteur d'elements
+	ADD one
+	STO count
+
+condition	
+        LDA size      #verifier si on a atteint le nombre
+		      #d'elements
+	SUB count
+	BRZ end
+	BRP tableau   #on a pas encore tout rempli
+
+end 	BR loop       #le tableau est rempli, on passe a la
+		      #recherche
+
+#-----------------------------------------------------------
+#Section qui sert a declarer les variables / constantes
+find	DAT 00        #sera rempli par la valeur a trouver
+index	DAT 09        #dernier element a pour indexe 9
+count   DAT 0         #compteur d'elements initialise a 0
+
+size    DAT 10        #taille voulue pour le tableau
+one 	DAT 1         #constante 1 pour incrementer
+                      #ou decrementer
+
+#-----------------------------------------------------------
+#Le tableau sera rempli au fur et a mesure
+TAB     DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
+	DAT 00
